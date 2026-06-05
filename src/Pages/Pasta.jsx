@@ -32,8 +32,11 @@ function Pasta() {
     }
 
     try {
+      // ✅ Dynamically switches between Vercel configurations and your production endpoint
+      const baseUrl = import.meta.env.VITE_API_URL || "https://madhumathidhonuri.pythonanywhere.com";
+
       await axios.post(
-        "http://127.0.0.1:8000/api/cart/",
+        `${baseUrl}/api/cart/`,
         { product_id: pasta.id },
         {
           headers: {
@@ -46,7 +49,7 @@ function Pasta() {
       alert(`${pasta.name} added to your cart!`);
     } catch (err) {
       console.error("Cart error:", err);
-      alert("Error: Ensure Pasta ID " + pasta.id + " is added to Django Admin first.");
+      alert("Error: Ensure pasta ID " + pasta.id + " is added to Django Admin first.");
     }
   };
   return (

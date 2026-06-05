@@ -20,42 +20,45 @@ const dessertItems = [
 function Desserts() {
   const [cartCount, setCartCount] = useState(0);
 
-  const handleAddToCart = async (item) => {
-      const token = localStorage.getItem("token");
-  
-      if (!token) {
-        alert("Please login first to order your pasta!");
-        return;
-      }
-  
-      try {
-        await axios.post(
-          "http://127.0.0.1:8000/api/cart/",
-          { product_id: item.id },
-          {
-            headers: {
-              Authorization: `Token ${token}`,
-            },
-          }
-        );
-  
-        setCartCount((prev) => prev + 1);
-        alert(`${item.name} added to your cart!`);
-      } catch (err) {
-        console.error("Cart error:", err);
-        alert("Error: Ensure dessert ID " + item.id + " is added to Django Admin first.");
-      }
-    };
+  const handleAddToCart = async (dessert) => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      alert("Please login first to order your dessert!");
+      return;
+    }
+
+    try {
+      // ✅ Dynamically switches between Vercel configurations and your production endpoint
+      const baseUrl = import.meta.env.VITE_API_URL || "https://madhumathidhonuri.pythonanywhere.com";
+
+      await axios.post(
+        `${baseUrl}/api/cart/`,
+        { product_id: dessert.id },
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        }
+      );
+
+      setCartCount((prev) => prev + 1);
+      alert(`${dessert.name} added to your cart!`);
+    } catch (err) {
+      console.error("Cart error:", err);
+      alert("Error: Ensure dessert ID " + dessert.id + " is added to Django Admin first.");
+    }
+  };
 
   const getBadgeColor = (type) => {
-    switch(type) {
+    switch (type) {
       case "Best Seller": return "bg-purple-600 text-white";
       case "Traditional": return "bg-orange-100 text-orange-800";
       default: return "bg-violet-100 text-violet-800";
     }
   };
 
- return (
+  return (
     <div className="min-h-screen bg-stone-50 px-6 py-10">
       {/* Header Section */}
       <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center mb-16 border-b border-stone-200 pb-6">
@@ -88,7 +91,7 @@ function Desserts() {
               <h2 className="text-xl font-bold text-stone-800 mb-2 tracking-tight group-hover:text-amber-600 transition-colors">
                 {dessert.name}
               </h2>
-              
+
               <p className="text-stone-500 text-sm mb-4 leading-relaxed line-clamp-2">
                 {dessert.description}
               </p>
@@ -100,7 +103,7 @@ function Desserts() {
                 </span>
 
                 {/* Add To Cart Trigger */}
-                <button 
+                <button
                   onClick={() => handleAddToCart(dessert)}
                   className="bg-stone-900 hover:bg-amber-600 active:scale-95 text-white text-sm font-bold px-6 py-2.5 rounded-xl transition-all duration-200 shadow-sm uppercase tracking-wider"
                 >

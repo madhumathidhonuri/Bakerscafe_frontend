@@ -7,13 +7,16 @@ function Login() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+  // ✅ Defined baseUrl dynamically to target your live PythonAnywhere server link
+  const baseUrl = import.meta.env.VITE_API_URL || "https://madhumathidhonuri.pythonanywhere.com";
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
     try {
-      // 1. Send login request to Django
-      const response = await axios.post("http://127.0.0.1:8000/api/login/", {
+      // 1. ✅ Send login request to your live Django server instead of localhost
+      const response = await axios.post(`${baseUrl}/api/login/`, {
         username: formData.username,
         password: formData.password,
       });

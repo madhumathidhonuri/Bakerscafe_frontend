@@ -7,6 +7,9 @@ function Orders() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+  // ✅ Defined baseUrl dynamically to switch to your production PythonAnywhere API
+  const baseUrl = import.meta.env.VITE_API_URL || "https://madhumathidhonuri.pythonanywhere.com";
+
   useEffect(() => {
     fetchOrderHistory();
   }, []);
@@ -19,7 +22,8 @@ function Orders() {
     }
 
     try {
-      const response = await axios.get("http://127.0.0.1:8000/api/order-history/", {
+      // ✅ Updated to capture order data directly from your live server instead of localhost
+      const response = await axios.get(`${baseUrl}/api/order-history/`, {
         headers: { Authorization: `Token ${token}` },
       });
       setOrders(response.data);

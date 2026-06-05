@@ -12,12 +12,16 @@ function Contacts() {
   // NEW: State for showing status messages
   const [status, setStatus] = useState({ type: "", msg: "" });
 
+  // ✅ Defined baseUrl dynamically to fallback to your live PythonAnywhere server link
+  const baseUrl = import.meta.env.VITE_API_URL || "https://madhumathidhonuri.pythonanywhere.com";
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus({ type: "loading", msg: "Sending..." });
 
     try {
-      await axios.post('http://127.0.0.1:8000/api/contact/', formData);
+      // ✅ Updated to point to your live production server contact endpoint instead of localhost
+      await axios.post(`${baseUrl}/api/contact/`, formData);
       
       // Show success message
       setStatus({ type: "success", msg: "Message sent successfully!" });

@@ -7,6 +7,9 @@ function Profile() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+  // ✅ Defined baseUrl dynamically to fallback to your live PythonAnywhere server link
+  const baseUrl = import.meta.env.VITE_API_URL || "https://madhumathidhonuri.pythonanywhere.com";
+
   useEffect(() => {
     const fetchUserData = async () => {
       const token = localStorage.getItem("token");
@@ -17,8 +20,8 @@ function Profile() {
       }
 
       try {
-        // Send the token in the Headers so Django knows WHO is asking
-        const response = await axios.get("http://127.0.0.1:8000/api/profile/", {
+        // ✅ Updated endpoint path to query your live production API instead of localhost
+        const response = await axios.get(`${baseUrl}/api/profile/`, {
           headers: {
             Authorization: `Token ${token}`,
           },
@@ -34,7 +37,7 @@ function Profile() {
     };
 
     fetchUserData();
-  }, [navigate]);
+  }, [navigate, baseUrl]); // Added baseUrl to the dependency array for completeness
 
   if (loading) {
     return (

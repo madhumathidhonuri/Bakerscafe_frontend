@@ -21,12 +21,15 @@ function Cakes() {
   const handleAddToCart = async (cake) => {
     const token = localStorage.getItem("token");
     if (!token) {
-      alert("Please login first to order your pasta!");
+      alert("Please login first to order your cake!");
       return;
     }
     try {
+      // ✅ Dynamically switches between Vercel configurations and your production endpoint
+      const baseUrl = import.meta.env.VITE_API_URL || "https://madhumathidhonuri.pythonanywhere.com";
+
       await axios.post(
-        "http://127.0.0.1:8000/api/cart/",
+        `${baseUrl}/api/cart/`,
         { product_id: cake.id },
         {
           headers: {
@@ -34,6 +37,7 @@ function Cakes() {
           },
         }
       );
+
       setCartCount((prev) => prev + 1);
       alert(`${cake.name} added to your cart!`);
     } catch (err) {

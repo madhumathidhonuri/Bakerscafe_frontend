@@ -15,6 +15,9 @@ function Checkout() {
   });
   const navigate = useNavigate();
 
+  // ✅ Defined baseUrl dynamically to switch between local testing and your production PythonAnywhere API
+  const baseUrl = import.meta.env.VITE_API_URL || "https://madhumathidhonuri.pythonanywhere.com";
+
   useEffect(() => {
     fetchCartForCheckout();
   }, []);
@@ -26,7 +29,8 @@ function Checkout() {
       return;
     }
     try {
-      const response = await axios.get("http://127.0.0.1:8000/api/cart/", {
+      // ✅ Corrected to use dynamic template string path
+      const response = await axios.get(`${baseUrl}/api/cart/`, {
         headers: { Authorization: `Token ${token}` },
       });
       setCartItems(response.data);
@@ -58,8 +62,8 @@ function Checkout() {
     };
 
     try {
-      // 1. Post to your new PlaceOrderView to save history and clear cart
-      await axios.post("http://127.0.0.1:8000/api/place-order/", orderData, {
+      // ✅ Updated endpoint route to push directly to your production live backend
+      await axios.post(`${baseUrl}/api/place-order/`, orderData, {
         headers: { Authorization: `Token ${token}` },
       });
 
@@ -73,7 +77,7 @@ function Checkout() {
       }, 4000);
     } catch (err) {
       console.error("Checkout error:", err);
-      alert("Failed to save order history. Make sure your Django 'place-order' URL is set up!");
+      alert("Failed to save order history. Make sure your Django 'place-order' URL is set up and running!");
     }
   };
 

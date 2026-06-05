@@ -7,6 +7,9 @@ function Cart() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+  // Defining baseUrl to reuse dynamically across the component endpoints
+  const baseUrl = import.meta.env.VITE_API_URL || "https://madhumathidhonuri.pythonanywhere.com";
+
   useEffect(() => {
     fetchCartData();
   }, []);
@@ -19,8 +22,8 @@ function Cart() {
     }
 
     try {
-      // Fetching the cart items you just saved in Django
-      const response = await axios.get("http://127.0.0.1:8000/api/cart/", {
+      // ✅ Updated to point directly to your live production server URL
+      const response = await axios.get(`${baseUrl}/api/cart/`, {
         headers: { Authorization: `Token ${token}` },
       });
       setCartItems(response.data);
@@ -34,7 +37,8 @@ function Cart() {
   const handleRemove = async (itemId) => {
     const token = localStorage.getItem("token");
     try {
-      await axios.delete(`http://127.0.0.1:8000/api/cart/${itemId}/`, {
+      // ✅ Updated to point directly to your live production server delete endpoint
+      await axios.delete(`${baseUrl}/api/cart/${itemId}/`, {
         headers: { Authorization: `Token ${token}` },
       });
       // Remove from local state so it disappears instantly
@@ -96,7 +100,7 @@ function Cart() {
                 <span className="text-green-600 font-bold uppercase text-xs">Free</span>
               </div>
               <div className="border-t pt-6 flex justify-between items-center mb-8">
-                <span className="text-lg font-bold">Total</span>
+                <span>Total</span>
                 <span className="text-3xl font-black text-amber-600">₹{calculateTotal()}</span>
               </div>
               <button className="w-full bg-gray-900 text-white py-4 rounded-2xl font-bold hover:bg-amber-600 transition-colors shadow-lg" onClick={() => navigate("/checkout")}>

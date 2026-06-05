@@ -32,9 +32,11 @@ function Burgers() {
     }
 
     try {
-      // Sending request to Django with burger.id and Auth Token
+      // ✅ Dynamically switches between Vercel configurations and your production endpoint
+      const baseUrl = import.meta.env.VITE_API_URL || "https://madhumathidhonuri.pythonanywhere.com";
+
       await axios.post(
-        "http://127.0.0.1:8000/api/cart/",
+        `${baseUrl}/api/cart/`,
         { product_id: burger.id },
         {
           headers: {
@@ -44,11 +46,10 @@ function Burgers() {
       );
 
       setCartCount((prev) => prev + 1);
-      alert(`${burger.name} added to your account cart!`);
+      alert(`${burger.name} added to your cart!`);
     } catch (err) {
       console.error("Cart error:", err);
-      // Helpful debug alert
-      alert(`Error: Product ID ${burger.id} not found in Django. Add this burger to Django Admin first!`);
+      alert("Error: Ensure burger ID " + burger.id + " is added to Django Admin first.");
     }
   };
   return (

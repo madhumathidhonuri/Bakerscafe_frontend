@@ -29,8 +29,11 @@ function Shakes() {
     }
 
     try {
+      // ✅ Dynamically switches between Vercel configurations and your production endpoint
+      const baseUrl = import.meta.env.VITE_API_URL || "https://madhumathidhonuri.pythonanywhere.com";
+
       await axios.post(
-        "http://127.0.0.1:8000/api/cart/",
+        `${baseUrl}/api/cart/`,
         { product_id: shake.id },
         {
           headers: {
@@ -43,7 +46,7 @@ function Shakes() {
       alert(`${shake.name} added to your cart!`);
     } catch (err) {
       console.error("Cart error:", err);
-      alert("Error: Ensure shake ID " + shake.id + " is added to Django Admin first.");
+      alert("Error: shake ID " + shake.id + " is added to Django Admin first.");
     }
   };
 

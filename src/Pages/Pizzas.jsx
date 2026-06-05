@@ -28,8 +28,11 @@ function Pizzas() {
     }
 
     try {
+      // ✅ Dynamically switches between Vercel configurations and your production endpoint
+      const baseUrl = import.meta.env.VITE_API_URL || "https://madhumathidhonuri.pythonanywhere.com";
+
       await axios.post(
-        "http://127.0.0.1:8000/api/cart/",
+        `${baseUrl}/api/cart/`,
         { product_id: pizza.id },
         {
           headers: {
@@ -39,10 +42,10 @@ function Pizzas() {
       );
 
       setCartCount((prev) => prev + 1);
-      alert(`${pizza.name} added to your account cart!`);
+      alert(`${pizza.name} added to your cart!`);
     } catch (err) {
-      console.error("Cart Error:", err);
-      alert("Failed to add to cart. Ensure this product exists in your Django database.");
+      console.error("Cart error:", err);
+      alert("Error: Ensure pizza ID " + pizza.id + " is added to Django Admin first.");
     }
   };
 
