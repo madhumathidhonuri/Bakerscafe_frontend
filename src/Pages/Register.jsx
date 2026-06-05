@@ -17,11 +17,14 @@ function Register() {
     setError("");
 
     try {
-      // Connects to the Django URL we defined earlier
-      await axios.post("http://127.0.0.1:8000/api/register/", formData);
+      // ✅ Dynamically fetches the live backend or falls back to your PythonAnywhere server link
+      const baseUrl = import.meta.env.VITE_API_URL || "https://madhumathidhonuri.pythonanywhere.com";
+
+      // Connects to your live production Django API instead of localhost
+      await axios.post(`${baseUrl}/api/register/`, formData);
       
       // On success, redirect to login
-      navigate("/profile");
+      navigate("/login"); // Fixed to send to /login so they can immediately sign in with their new credentials!
     } catch (err) {
       // Handles errors returned from Django (e.g., email already exists)
       setError(err.response?.data?.email?.[0] || "Registration failed. Please try again.");
@@ -71,7 +74,7 @@ function Register() {
           <div className="relative border-b border-gray-200 focus-within:border-amber-900 transition-colors py-1">
             <label className="block text-[9px] uppercase tracking-widest text-zinc-400 font-bold mb-1">Phone</label>
             <input
-              type="tel"
+              type="text" // Changed to text to handle standard validations smoothly
               required
               value={formData.phone}
               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
